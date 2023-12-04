@@ -15,9 +15,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
+import re
+from bs4 import BeautifulSoup
+
 load_dotenv()
-username = os.getenv("username")
+email = os.getenv("email")
 password = os.getenv("password")
+# username = "elijah.khor.2021@scis.smu.edu.sg"
+# password = "AyabeKyoto1!"
 
 app = FastAPI()
 
@@ -29,6 +34,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 chrome_options = Options()
 # chrome_options.add_argument('--headless')
@@ -43,25 +49,53 @@ chrome_options.add_argument('--start-maximized')
 @app.get("/webscrape/{company}")
 async def webscrape_company_name(company: str):
 
-  return company
+  url = 'http://libproxy.smu.edu.sg/login?url=https://orbis4.bvdinfo.com/ip'
+  driver = webdriver.Chrome(options=chrome_options)
+  driver.maximize_window()
+  driver.get(url)
+  wait = WebDriverWait(driver, 10)
 
-capitalIQUrl = "https://secure.signin.spglobal.com/sso/saml2/0oa1n9y64jc36qEBE1d8/app/spglobaliam_sp_1/exk1mregn1oWwP2NB1d8/sso/saml?RelayState=https%3A%2F%2Fwww.capitaliq.com%2FCIQDotNet%2Fsaml-sso.aspx"
+  time.sleep(1)
+  username_field = driver.find_element(By.ID, 'userNameInput')
+  username_field.send_keys(email)
+  password_field = driver.find_element(By.ID, 'passwordInput')
+  password_field.send_keys(password)
+  password_field.send_keys(Keys.RETURN)
+  time.sleep(5)
+
+  try:
+    # inputs company name into search bar
+    company_input_locator = (By.ID, 'search')
+    company_input = wait.until(EC.presence_of_element_located(company_input_locator))
+    company_input.send_keys(company)
+
+    search_results = (By.CLASS_NAME, 'suggestions')
+    suggestions = wait.until(EC.presence_of_element_located(search_results))
+
+
+    first_result = (By.CSS_SELECTOR, 'a[role="link"]')
+    first = wait.until(EC.presence_of_element_located(first_result))
+    first.click()
+
+    time.sleep(10)
+    html = driver.page_source
+
+    soup = BeautifulSoup(html, 'html.parser')
+    record_name = soup.find('div', class_='recordName')
+    extracted_text = record_name.text
+    print(extracted_text)
+
+    trimmed_extracted_text = extracted_text.strip()
+    trimmed_extracted_text = re.sub(r'\n', '', trimmed_extracted_text)
+    return trimmed_extracted_text
+
   
-# driver = webdriver.Chrome()
-# driver.maximize_window()
-# driver.get(capitalIQUrl)
-# time.sleep(5)
-# driver.close()
+  except:
+     return "not able to find result"
 
-url = 'http://libproxy.smu.edu.sg/login?url=https://orbis4.bvdinfo.com/ip'
-orbis = webdriver.Chrome(options=chrome_options)
-orbis.get(url)
 
-un_locator = (By.ID, 'userNameInput')
-un = WebDriverWait(orbis, 5).until(EC.presence_of_element_located(un_locator))
-un.send_keys(username)
-pwd = orbis.find_element(By.ID, 'passwordInput')
-pwd.send_keys(password)
+  
+
 
 if __name__ == '__main__':
     import uvicorn
