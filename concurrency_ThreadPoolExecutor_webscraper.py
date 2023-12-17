@@ -15,6 +15,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import re
 from bs4 import BeautifulSoup
+from concurrent.futures import ThreadPoolExecutor
+
 
 load_dotenv()
 email = os.getenv("email")
@@ -48,6 +50,7 @@ def start_driver():
   return driver
 
 def webscrape_orbis(company):
+  orbis_start_time = time.time()
   url = 'http://libproxy.smu.edu.sg/login?url=https://orbis4.bvdinfo.com/ip'
   driver = start_driver()
   driver.get(url)
@@ -112,6 +115,10 @@ def webscrape_orbis(company):
           label_dict[label_text] = value_text
       orbis_extracted_info[trimmed_extracted_text] = label_dict
 
+      orbis_end_time = time.time()
+      orbis_elapsed_time = orbis_end_time - orbis_start_time
+      print(f"orbis webscraper took {orbis_elapsed_time}")
+
       return orbis_extracted_info
 
   except Exception as e:
@@ -119,6 +126,7 @@ def webscrape_orbis(company):
      return {"message": "failed"}
 
 def webscrape_capitalIQ(company):
+  capitalIQ_start_time = time.time()
   # this link will bring you to the capitalIQ home page first to log in
   url = 'https://www.capitaliq.com/ciqdotnet/login-okta.aspx?code=6'
   driver = start_driver()
@@ -210,38 +218,37 @@ def webscrape_capitalIQ(company):
     capitalIQ_extracted_info = {}
     capitalIQ_extracted_info[company_name] = capitalIQ_data
 
+    capitalIQ_end_time = time.time()
+    capitalIQ_elapsed_time = capitalIQ_end_time - capitalIQ_start_time
+    print(f"capitalIQ elapsed time: {capitalIQ_elapsed_time}")
+
     return capitalIQ_extracted_info
 
   except:
     return {"message":"failed"}
-
+    
 @app.get("/api/webscrape/{company}")
 def webscrape_company_name(company: str):
+
   start_time = time.time()
 
+  with ThreadPoolExecutor(max_workers=2) as executor:
+    orbis_future = executor.submit(webscrape_orbis, company)
+    capitalIQ_future = executor.submit(webscrape_capitalIQ, company)
+
+  orbis_data = orbis_future.result()
+  capitalIQ_data = capitalIQ_future.result()
+
   webscraped_data = {}
+  webscraped_data["orbis"] = orbis_data
+  webscraped_data["capitalIQ"] = capitalIQ_data
 
-  orbis_start_time = time.time()
-  orbis = webscrape_orbis(company)
-  orbis_end_time = time.time()
-  orbis_elapsed_time = orbis_end_time - orbis_start_time
-  print(f"webscraping Orbis took: {orbis_elapsed_time}")
-
-  capitalIQ_start_time = time.time()
-  capitalIQ = webscrape_capitalIQ(company)
-  capitalIQ_end_time = time.time()
-  capitalIQ_elapsed_time = capitalIQ_end_time - capitalIQ_start_time
-  print(f"webscraping capitalIQ took: {capitalIQ_elapsed_time}")
-  
   end_time = time.time()
   elapsed_time = end_time - start_time
   print(f"Elapsed time: {elapsed_time}")
-
-  webscraped_data["orbis"] = orbis
-  webscraped_data["capitalIQ"] = capitalIQ
 
   return webscraped_data
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run("sequential_webscraper:app", host='127.0.0.1', port=5000, reload=True)
+    uvicorn.run("concurrency_ThreadPoolExecutor_webscraper:app", host='127.0.0.1', port=5001, reload=True)

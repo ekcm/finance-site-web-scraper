@@ -1,0 +1,24 @@
+import multiprocessing
+import time
+
+def p1_print_numbers():
+    for i in range(100):
+        print(f"Process 1: {i}")
+
+def p2_print_numbers():
+    for i in range(100):
+        print(f"Process 2: {i}")
+
+if __name__ == "__main__":
+    start_time = time.time()
+    p1 = multiprocessing.Process(target=p1_print_numbers)
+    p2 = multiprocessing.Process(target=p2_print_numbers)
+
+    p1.start()
+    p2.start()
+
+    p1.join()
+    p2.join()
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    print(f"Elapsed time: {elapsed_time}")
