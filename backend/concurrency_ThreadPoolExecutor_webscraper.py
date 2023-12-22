@@ -234,24 +234,28 @@ def webscrape_capitalIQ(company):
 @app.get("/api/webscrape/{company}")
 def webscrape_company_name(company: str):
 
-  start_time = time.time()
-
-  with ThreadPoolExecutor(max_workers=2) as executor:
-    orbis_future = executor.submit(webscrape_orbis, company)
-    capitalIQ_future = executor.submit(webscrape_capitalIQ, company)
-
-  orbis_data = orbis_future.result()
-  capitalIQ_data = capitalIQ_future.result()
-
-  webscraped_data = {}
-  webscraped_data["orbis"] = orbis_data
-  webscraped_data["capitalIQ"] = capitalIQ_data
-
-  end_time = time.time()
-  elapsed_time = end_time - start_time
-  print(f"Elapsed time: {elapsed_time}")
+  webscraped_data = {"orbis":{"APPLE INC.":{"Operating revenue (Turnover)":"383,285,000","P/L before tax":"113,736,000","P/L for period [=Net income]":"96,995,000","Cash flow [Net Income before D&A]":"108,514,000","Total assets":"352,583,000","Shareholders funds":"62,146,000","Current ratio (x)":"0.99","Profit margin (%)":"29.67","ROE using P/L before tax (%)":"183.01","ROCE using P/L before tax (%)":"56.77","Solvency ratio (Asset based) (%)":"17.63","Number of employees":"161,000"}},"capitalIQ":{"Apple Inc. (NasdaqGS:AAPL)":{"Last  (Delayed)":"193.60","Market Cap (mm)":"3,011,012.8","Open":"195.18","Shares Out. (mm)":"15,552.8","Previous Close":"193.60","Float %":"99.9%","Change on Day":"(1.08)","Shares Sold Short (mm)":"110.7","Change % on Day":"(0.6)%","Dividend Yield %":"0.5%","Day High/Low":"195.41/ 192.97","Diluted EPS Excl. Extra Items":"6.13","52 wk High/Low":"199.62/ 124.17","P/Diluted EPS Before Extra":"31.8x","Volume (mm)":"36.95","Avg 3M Dly Vlm (mm)":"54.62","Beta 5Y":"1.31","Total Revenue":"383,285.0","Market Capitalization":"3,027,809.8","TEV/Total Revenue":"7.8x","EBITDA":"125,820.0","Total Enterprise Value":"2,989,640.8","TEV/EBITDA":"21.1x","EBIT":"114,301.0","Cash & ST Invst.":"61,555.0","Net Income":"96,995.0","Total Debt":"123,930.0","Price/Tang BV":"48.7x","Capital Expenditure":"(10,959.0)","Total Assets":"352,583.0","Total Debt/EBITDA":"0.9x"}}}
 
   return webscraped_data
+
+  # start_time = time.time()
+
+  # with ThreadPoolExecutor(max_workers=2) as executor:
+  #   orbis_future = executor.submit(webscrape_orbis, company)
+  #   capitalIQ_future = executor.submit(webscrape_capitalIQ, company)
+
+  # orbis_data = orbis_future.result()
+  # capitalIQ_data = capitalIQ_future.result()
+
+  # webscraped_data = {}
+  # webscraped_data["orbis"] = orbis_data
+  # webscraped_data["capitalIQ"] = capitalIQ_data
+
+  # end_time = time.time()
+  # elapsed_time = end_time - start_time
+  # print(f"Elapsed time: {elapsed_time}")
+
+  # return webscraped_data
 
 if __name__ == '__main__':
     import uvicorn

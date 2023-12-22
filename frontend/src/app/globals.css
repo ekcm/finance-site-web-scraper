@@ -33,7 +33,7 @@ body {
 
 .glassmorphismContainer{
   background-color: white;
-  opacity: 20%;
+  /* opacity: 20%; */
   border-radius: 0.5rem;
   margin-top: 0.2rem;
   height: 20rem;
