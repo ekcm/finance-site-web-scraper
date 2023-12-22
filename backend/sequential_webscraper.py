@@ -16,6 +16,8 @@ import time
 import re
 from bs4 import BeautifulSoup
 
+
+
 load_dotenv()
 email = os.getenv("email")
 password = os.getenv("password")

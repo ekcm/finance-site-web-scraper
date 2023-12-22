@@ -122,8 +122,12 @@ def webscrape_orbis(company):
       return orbis_extracted_info
 
   except Exception as e:
-     print(f"error message: {e}")
-     return {"message": "failed"}
+    orbis_end_time = time.time()
+    orbis_elapsed_time = orbis_end_time - orbis_start_time
+    print(f"orbis webscraper took {orbis_elapsed_time}")
+  
+    print(f"error message: {e}")
+    return {"message": "failed"}
 
 def webscrape_capitalIQ(company):
   capitalIQ_start_time = time.time()
