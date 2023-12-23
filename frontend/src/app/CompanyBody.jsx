@@ -92,18 +92,20 @@ const CompanyBody = ( {isSequential} ) => {
                             <thead>
                               <tr><th>Orbis</th></tr>
                               {Object.entries(fetchedData['orbis']).map(([company, attributes]) =>
-                                <tr key={company}><th className="font-normal">{company}</th></tr>
+                                <tr key={company}><th key = {company} className="font-normal">{company}</th></tr>
                               )}
                             </thead>
                             <tbody>
                               <div>
                                 {Object.entries(fetchedData['orbis']).map(([company, attributes]) => 
+                                  <div key={company}>
                                     {Object.entries(attributes).map(([key, value]) => 
-                                      <tr className="text-xs" key={key}>
+                                      <tr key={company} className="text-xs">
                                         <td className="font-medium">{key}</td>
                                         <td className="text-right">{value}</td>
                                       </tr>
                                     )}
+                                  </div>
                                 )}
                               </div>
                             </tbody>
@@ -125,12 +127,14 @@ const CompanyBody = ( {isSequential} ) => {
                             <tbody>
                               <div>
                                 {Object.entries(fetchedData['capitalIQ']).map(([company, attributes]) => 
+                                  <div key={company}>
                                     {Object.entries(attributes).map(([key, value]) => 
                                       <tr key={key} className="text-xs">
                                         <td className="font-medium">{key}</td>
                                         <td className="text-right">{value}</td>
                                       </tr>
                                     )}
+                                  </div>
                                 )}
                               </div>
                             </tbody>
