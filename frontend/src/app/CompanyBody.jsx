@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from "react";
 
-const CompanyBody = () => {
+const CompanyBody = ( {isSequential} ) => {
 
   const [buttonClicked, setButtonClicked] = useState(false);
   const [searchProgress, setSearchProgress] = useState(false);
@@ -17,7 +17,12 @@ const CompanyBody = () => {
 
     // make fetch request to FastAPI backend
     try{
-      const url = 'http://127.0.0.1:5001/api/webscrape/' + inputValue;
+      var url = ''
+      if (isSequential === true){
+        url = 'http://127.0.0.1:5000/api/webscrape/' + inputValue;
+      } else{
+        url = 'http://127.0.0.1:5001/api/webscrape/' + inputValue;
+      }
       console.log(url)
       const response = await fetch(url, {
         method: 'GET',
@@ -52,7 +57,12 @@ const CompanyBody = () => {
           </h1>
           <div className="flex justify-center p-2">
             <input className="searchInput pl-2" placeholder="Type company name"/>
-            <button className="searchButton" onClick={onButtonClick}>Search</button>
+            <button 
+              className={(isSequential === true
+                ? 'searchButton'
+                : 'searchButton-concurrency'
+                )}
+              onClick={onButtonClick}>Search</button>
           </div>
         </div>
       </div>
@@ -73,48 +83,54 @@ const CompanyBody = () => {
                       <h1 className="text-center">{`Time taken to retrieve results: ${fetchedData["timeTaken"]}`}</h1>
                       <div className="flex">
                         <div className="m-2">
-                          <table className="resultTable">
+                          <table 
+                            className={(isSequential === true
+                              ? 'resultTable'
+                              : 'resultTable-concurrency'
+                            )}
+                          >
                             <thead>
                               <tr><th>Orbis</th></tr>
                               {Object.entries(fetchedData['orbis']).map(([company, attributes]) =>
-                                <tr><th className="font-normal">{company}</th></tr>
+                                <tr key={company}><th className="font-normal">{company}</th></tr>
                               )}
                             </thead>
                             <tbody>
                               <div>
                                 {Object.entries(fetchedData['orbis']).map(([company, attributes]) => 
-                                  <div>
                                     {Object.entries(attributes).map(([key, value]) => 
-                                      <tr className="text-xs">
+                                      <tr className="text-xs" key={key}>
                                         <td className="font-medium">{key}</td>
                                         <td className="text-right">{value}</td>
                                       </tr>
                                     )}
-                                  </div>
                                 )}
                               </div>
                             </tbody>
                           </table>
                         </div>
                         <div className="m-2">
-                          <table className="resultTable">
+                          <table 
+                              className={(isSequential === true
+                                ? 'resultTable'
+                                : 'resultTable-concurrency'
+                              )}
+                            >
                             <thead>
                               <tr><th>CapitalIQ</th></tr>
                               {Object.entries(fetchedData['capitalIQ']).map(([company, attributes]) =>
-                                <tr><th className="font-normal">{company}</th></tr>
+                                <tr key={company}><th className="font-normal">{company}</th></tr>
                               )}
                             </thead>
                             <tbody>
                               <div>
                                 {Object.entries(fetchedData['capitalIQ']).map(([company, attributes]) => 
-                                  <div>
                                     {Object.entries(attributes).map(([key, value]) => 
-                                      <tr className="text-xs">
+                                      <tr key={key} className="text-xs">
                                         <td className="font-medium">{key}</td>
                                         <td className="text-right">{value}</td>
                                       </tr>
                                     )}
-                                  </div>
                                 )}
                               </div>
                             </tbody>

@@ -1,13 +1,16 @@
 'use client'
 import React, {useState} from "react";
 
-const Navbar2 = () => {
+const Navbar = ( {isSequential, onSequentialChange} ) => {
 
-  const[isSequential, setSequential] = useState(true);
+  const[sequential, setSequential] = useState(isSequential);
 
   const changeStrategyClick = async() => {
-    setSequential((prevSequential) => !prevSequential)
+    const newSequentialState = !sequential;
+    setSequential(newSequentialState);
+    onSequentialChange(newSequentialState)
   }
+
 
   return (
     <div className="nav">
@@ -36,4 +39,4 @@ const Navbar2 = () => {
 
 };
 
-export default Navbar2;
+export default Navbar;

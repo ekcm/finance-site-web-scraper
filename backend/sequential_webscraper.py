@@ -242,6 +242,8 @@ def webscrape_company_name(company: str):
   webscraped_data["orbis"] = orbis
   webscraped_data["capitalIQ"] = capitalIQ
 
+  webscraped_data["timeTaken"] = elapsed_time
+
   return webscraped_data
 
 if __name__ == '__main__':
