@@ -33,9 +33,17 @@ body {
 
 .glassmorphismContainer{
   background-color: white;
-  /* opacity: 20%; */
   border-radius: 0.5rem;
   margin-top: 0.2rem;
-  height: 20rem;
-    
+  min-height: 20rem;
+  height: auto;
+}
+
+.resultTable{
+  border-width: 1px;
+  border-color: theme("colors.yellow-1");
+}
+
+.resultTable thead{
+  background-color: theme("colors.yellow-1");
 }
