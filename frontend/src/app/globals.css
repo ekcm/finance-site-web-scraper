@@ -37,13 +37,25 @@ body {
   margin-top: 0.2rem;
   min-height: 20rem;
   height: auto;
+  padding: 1rem;
 }
 
 .resultTable{
   border-width: 1px;
   border-color: theme("colors.yellow-1");
+  width: 100%;
 }
 
 .resultTable thead{
   background-color: theme("colors.yellow-1");
+}
+
+@media screen and (max-width: 400px) {
+  .glassmorphismContainer {
+    min-height: auto;
+  }
+
+  .resultTable {
+    overflow-x: auto;
+  }
 }

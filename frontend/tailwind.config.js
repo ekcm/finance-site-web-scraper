@@ -12,7 +12,9 @@ module.exports = {
         "background-black-2": "#1E1E1E",
         "grey-1": "#858585",
         "yellow-1": "#F6D06C",
-        "yellow-2": "#DFA638"
+        "yellow-2": "#DFA638",
+        "blue-1": "#12A8FD",
+        "blue-2": "#0B74B0"
       },
     },
   },

@@ -69,28 +69,58 @@ const CompanyBody = () => {
                   </div>
                 </div>
                   ):fetchedData ? (
-                    <div className="text-xs">
-                      <h1>completed</h1>
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Attribute</th>
-                            <th>Value</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {Object.entries(fetchedData).map(([source, values]) =>
-                            Object.entries(values).map(([company, attributes]) =>
-                              Object.entries(attributes).map(([attribute, value]) => (
-                                <tr key={attribute}>
-                                  <td>{`${source} - ${company} - ${attribute}`}</td>
-                                  <td>{value}</td>
-                                </tr>
-                              ))
-                            )
-                          )}
-                        </tbody>
-                      </table>
+                    <div>
+                      <h1 className="text-center">{`Time taken to retrieve results: ${fetchedData["timeTaken"]}`}</h1>
+                      <div className="flex">
+                        <div className="m-2">
+                          <table className="resultTable">
+                            <thead>
+                              <tr><th>Orbis</th></tr>
+                              {Object.entries(fetchedData['orbis']).map(([company, attributes]) =>
+                                <tr><th className="font-normal">{company}</th></tr>
+                              )}
+                            </thead>
+                            <tbody>
+                              <div>
+                                {Object.entries(fetchedData['orbis']).map(([company, attributes]) => 
+                                  <div>
+                                    {Object.entries(attributes).map(([key, value]) => 
+                                      <tr className="text-xs">
+                                        <td className="font-medium">{key}</td>
+                                        <td className="text-right">{value}</td>
+                                      </tr>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="m-2">
+                          <table className="resultTable">
+                            <thead>
+                              <tr><th>CapitalIQ</th></tr>
+                              {Object.entries(fetchedData['capitalIQ']).map(([company, attributes]) =>
+                                <tr><th className="font-normal">{company}</th></tr>
+                              )}
+                            </thead>
+                            <tbody>
+                              <div>
+                                {Object.entries(fetchedData['capitalIQ']).map(([company, attributes]) => 
+                                  <div>
+                                    {Object.entries(attributes).map(([key, value]) => 
+                                      <tr className="text-xs">
+                                        <td className="font-medium">{key}</td>
+                                        <td className="text-right">{value}</td>
+                                      </tr>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <h1>No data found</h1>
