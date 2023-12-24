@@ -11,8 +11,7 @@
     },
     {
       "src": "frontend/src/app/layout.js",
-      "use": "@vercel/node",
-      "buildCommand": "npm run build"
+      "use": "@vercel/node"
     }
   ]
 }
