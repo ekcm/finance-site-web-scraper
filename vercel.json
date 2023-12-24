@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/sequential_webscraper.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "backend/concurrency_ThreadPoolExecutor_webscraper.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/src/app/layout.js",
+      "use": "@vercel/node",
+      "buildCommand": "npm run build"
+    }
+  ]
+}
